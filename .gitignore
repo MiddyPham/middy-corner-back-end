@@ -15,6 +15,13 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+# MD files for environment variables
+ENV_SETUP.md
+
+SWAGGER_README.md
+
+ADMIN_SYSTEM.md
+
 # OS
 .DS_Store
 

@@ -16,7 +16,7 @@ import { FacebookStrategy } from './strategies/facebook.strategy';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get('JWT_SECRET'),
+        secret: configService.get('JWT_SECRET') || 'fallback-secret-key-for-development',
         signOptions: { expiresIn: '1d' },
       }),
       inject: [ConfigService],

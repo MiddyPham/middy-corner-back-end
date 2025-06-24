@@ -20,11 +20,15 @@ export class FacebookStrategy extends PassportStrategy<typeof Strategy>(
 ) {
   constructor(private configService: ConfigService) {
     super({
-      clientID: configService.get<string>('FACEBOOK_CLIENT_ID') as string,
-      clientSecret: configService.get<string>(
-        'FACEBOOK_CLIENT_SECRET',
-      ) as string,
-      callbackURL: configService.get<string>('FACEBOOK_CALLBACK_URL') as string,
+      clientID:
+        (configService.get<string>('FACEBOOK_CLIENT_ID') as string) ??
+        'dummy-facebook-client-id',
+      clientSecret:
+        (configService.get<string>('FACEBOOK_CLIENT_SECRET') as string) ??
+        'dummy-facebook-client-secret',
+      callbackURL:
+        (configService.get<string>('FACEBOOK_CALLBACK_URL') as string) ??
+        'http://localhost:8001/auth/facebook/callback',
       scope: ['email', 'public_profile'],
       profileFields: ['id', 'emails', 'name', 'picture'],
     });

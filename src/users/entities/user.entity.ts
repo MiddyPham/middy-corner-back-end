@@ -10,6 +10,11 @@ import { Post } from '../../posts/entities/post.entity';
 import { Comment } from '../../comments/entities/comment.entity';
 import { Reaction } from '../../reactions/entities/reaction.entity';
 
+export enum UserRole {
+  USER = 'user',
+  ADMIN = 'admin',
+}
+
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -29,6 +34,13 @@ export class User {
 
   @Column({ nullable: true })
   facebookId: string;
+
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.USER,
+  })
+  role: UserRole;
 
   @OneToMany(() => Post, (post) => post.author)
   posts: Post[];

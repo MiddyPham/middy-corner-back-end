@@ -7,6 +7,7 @@ import { Request } from 'express';
 interface JwtPayload {
   sub: string;
   email: string;
+  role: string;
 }
 
 type JwtExtractor = (request: Request) => string | null;
@@ -17,11 +18,17 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken() as JwtExtractor,
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('JWT_SECRET') as string,
+      secretOrKey:
+        (configService.get<string>('JWT_SECRET') as string) ??
+        'fallback-secret-key-for-development',
     });
   }
 
   validate(payload: JwtPayload) {
-    return { id: payload.sub, email: payload.email };
+    return {
+      id: payload.sub,
+      email: payload.email,
+      role: payload.role,
+    };
   }
 }
