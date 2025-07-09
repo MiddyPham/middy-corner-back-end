@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards, Req } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
   ApiTags,
@@ -11,12 +11,30 @@ import {
   LoginResponseDto,
   GoogleAuthDto,
   FacebookAuthDto,
+  LoginDto,
 } from './dto/auth.dto';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Post('login')
+  @ApiOperation({
+    summary: 'Login with email (Development only)',
+    description: 'Login with email for development purposes',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Login successful',
+    type: LoginResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Invalid email',
+  })
+  async login(@Body() loginDto: LoginDto) {
+    return await this.authService.loginWithEmail(loginDto.email, loginDto.password);
+  }
 
   @Get('google')
   @UseGuards(AuthGuard('google'))

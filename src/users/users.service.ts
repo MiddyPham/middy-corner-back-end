@@ -18,6 +18,7 @@ export class UsersService {
   }
 
   async createAdmin(createUserDto: CreateUserDto): Promise<User> {
+    console.log(createUserDto);
     const user = this.usersRepository.create({
       ...createUserDto,
       role: UserRole.ADMIN,

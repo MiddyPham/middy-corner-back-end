@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/entities/user.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -14,9 +15,36 @@ export class AuthService {
     return await this.usersService.findByEmail(email);
   }
 
+  async loginWithEmail(email: string, password?: string) {
+    console.log(email, password);
+    const user = await this.usersService.findByEmail(email);
+
+    console.log(user);
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    // Nếu user không phải OAuth, bắt buộc phải có password
+    if (!user.googleId && !user.facebookId) {
+      if (!password) {
+        throw new UnauthorizedException('Password is required');
+      }
+      if (!user.password) {
+        throw new UnauthorizedException('User does not have a password set');
+      }
+      const isPasswordValid = await (bcrypt as any).compare(password, user.password);
+      if (!isPasswordValid) {
+        throw new UnauthorizedException('Invalid password');
+      }
+    }
+
+    return this.login(user);
+  }
+
   async login(user: User) {
-    const payload = { 
-      email: user.email, 
+    const payload = {
+      email: user.email,
       sub: user.id,
       role: user.role,
     };

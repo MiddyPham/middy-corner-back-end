@@ -8,10 +8,16 @@ import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { CommentsModule } from './comments/comments.module';
 import { ReactionsModule } from './reactions/reactions.module';
+import { CategoriesModule } from './categories/categories.module';
+import { TagsModule } from './tags/tags.module';
+import { MediaModule } from './media/media.module';
 import { User } from './users/entities/user.entity';
 import { Post } from './posts/entities/post.entity';
 import { Comment } from './comments/entities/comment.entity';
 import { Reaction } from './reactions/entities/reaction.entity';
+import { Category } from './categories/entities/category.entity';
+import { Tag } from './tags/entities/tag.entity';
+import { Media } from './media/entities/media.entity';
 
 @Module({
   imports: [
@@ -22,12 +28,12 @@ import { Reaction } from './reactions/entities/reaction.entity';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: configService.get('DATABASE_HOST') || 'localhost',
-        port: +(configService.get('DATABASE_PORT') || 5432),
-        username: configService.get('DATABASE_USERNAME') || 'postgres',
-        password: configService.get('DATABASE_PASSWORD') || 'password',
-        database: configService.get('DATABASE_NAME') || 'blog_db',
-        entities: [User, Post, Comment, Reaction],
+        host: configService.get('DATABASE_HOST'),
+        port: +configService.get('DATABASE_PORT'),
+        username: configService.get('DATABASE_USERNAME'),
+        password: configService.get('DATABASE_PASSWORD'),
+        database: configService.get('DATABASE_NAME'),
+        entities: [User, Post, Comment, Reaction, Category, Tag, Media],
         synchronize: true,
       }),
       inject: [ConfigService],
@@ -37,6 +43,9 @@ import { Reaction } from './reactions/entities/reaction.entity';
     PostsModule,
     CommentsModule,
     ReactionsModule,
+    CategoriesModule,
+    TagsModule,
+    MediaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

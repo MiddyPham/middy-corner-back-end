@@ -17,6 +17,8 @@ lerna-debug.log*
 
 # MD files for environment variables
 ENV_SETUP.md
+BLOG_API_FRONTEND.md
+BLOG_MANAGEMENT_API.md
 
 SWAGGER_README.md
 
@@ -28,6 +30,7 @@ ADMIN_SYSTEM.md
 # Tests
 /coverage
 /.nyc_output
+/src/scripts/create-admin.ts
 
 # IDEs and editors
 /.idea
@@ -37,6 +40,7 @@ ADMIN_SYSTEM.md
 *.launch
 .settings/
 *.sublime-workspace
+test-auth-api.http
 
 # IDE - VSCode
 .vscode/*
