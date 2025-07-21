@@ -12,6 +12,8 @@ import {
   GoogleAuthDto,
   FacebookAuthDto,
   LoginDto,
+  RefreshTokenDto,
+  RefreshResponseDto,
 } from './dto/auth.dto';
 
 @ApiTags('auth')
@@ -33,7 +35,27 @@ export class AuthController {
     description: 'Invalid email',
   })
   async login(@Body() loginDto: LoginDto) {
-    return await this.authService.loginWithEmail(loginDto.email, loginDto.password);
+    return await this.authService.loginWithEmail(
+      loginDto.email,
+      loginDto.password,
+    );
+  }
+
+  @Post('refresh')
+  @ApiOperation({
+    summary: 'Refresh access token',
+    description: 'Get new access and refresh tokens using refresh token',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Tokens refreshed successfully',
+    type: RefreshResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Invalid refresh token',
+  })
+  async refresh(@Body() refreshDto: RefreshTokenDto) {
+    return await this.authService.refreshToken(refreshDto.refreshToken);
   }
 
   @Get('google')

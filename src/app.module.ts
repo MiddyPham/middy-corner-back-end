@@ -26,16 +26,52 @@ import { Media } from './media/entities/media.entity';
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('DATABASE_HOST'),
-        port: +configService.get('DATABASE_PORT'),
-        username: configService.get('DATABASE_USERNAME'),
-        password: configService.get('DATABASE_PASSWORD'),
-        database: configService.get('DATABASE_NAME'),
-        entities: [User, Post, Comment, Reaction, Category, Tag, Media],
-        synchronize: true,
-      }),
+      useFactory: (configService: ConfigService) => {
+        const databaseUrl = configService.get('DATABASE_URL') as string;
+        const isProduction = configService.get('NODE_ENV') === 'production';
+
+        if (databaseUrl) {
+          // Use DATABASE_URL if available (for Render deployment)
+          return {
+            type: 'postgres',
+            url: databaseUrl,
+            entities: [User, Post, Comment, Reaction, Category, Tag, Media],
+            synchronize: !isProduction,
+            ssl: isProduction
+              ? {
+                  rejectUnauthorized: false,
+                  require: true,
+                }
+              : false,
+            extra: isProduction
+              ? {
+                  ssl: {
+                    rejectUnauthorized: false,
+                    require: true,
+                  },
+                }
+              : {},
+          };
+        } else {
+          // Fallback to individual environment variables (for local development)
+          return {
+            type: 'postgres',
+            host: configService.get('DATABASE_HOST', 'localhost'),
+            port: +configService.get('DATABASE_PORT', 5432),
+            username: configService.get('DATABASE_USERNAME', 'postgres'),
+            password: configService.get('DATABASE_PASSWORD', ''),
+            database: configService.get('DATABASE_NAME', 'middy_corner'),
+            entities: [User, Post, Comment, Reaction, Category, Tag, Media],
+            synchronize: !isProduction,
+            ssl: isProduction
+              ? {
+                  rejectUnauthorized: false,
+                  require: true,
+                }
+              : false,
+          };
+        }
+      },
       inject: [ConfigService],
     }),
     AuthModule,

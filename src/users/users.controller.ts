@@ -35,7 +35,8 @@ export class UsersController {
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({
     summary: 'Create a new user (Admin only)',
-    description: 'Create a new user account. Only admins can perform this action.',
+    description:
+      'Create a new user account. Only admins can perform this action.',
   })
   @ApiResponse({
     status: 201,
@@ -54,7 +55,8 @@ export class UsersController {
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({
     summary: 'Create a new admin user (Admin only)',
-    description: 'Create a new admin user account. Only existing admins can perform this action.',
+    description:
+      'Create a new admin user account. Only existing admins can perform this action.',
   })
   @ApiResponse({
     status: 201,
@@ -73,7 +75,8 @@ export class UsersController {
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({
     summary: 'Get all users (Admin only)',
-    description: 'Retrieve a list of all users. Only admins can perform this action.',
+    description:
+      'Retrieve a list of all users. Only admins can perform this action.',
   })
   @ApiResponse({
     status: 200,
@@ -109,7 +112,8 @@ export class UsersController {
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({
     summary: 'Get user by ID (Admin only)',
-    description: 'Retrieve a specific user by ID. Only admins can perform this action.',
+    description:
+      'Retrieve a specific user by ID. Only admins can perform this action.',
   })
   @ApiResponse({
     status: 200,
@@ -128,7 +132,8 @@ export class UsersController {
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({
     summary: 'Update user role (Admin only)',
-    description: 'Update the role of a specific user. Only admins can perform this action.',
+    description:
+      'Update the role of a specific user. Only admins can perform this action.',
   })
   @ApiResponse({
     status: 200,
@@ -137,10 +142,7 @@ export class UsersController {
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiForbiddenResponse({ description: 'Forbidden - Admin access required' })
-  updateRole(
-    @Param('id') id: string,
-    @Body() body: { role: UserRole },
-  ) {
+  updateRole(@Param('id') id: string, @Body() body: { role: UserRole }) {
     return this.usersService.updateRole(id, body.role);
   }
 
@@ -180,4 +182,4 @@ export class UsersController {
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }
-} 
+}

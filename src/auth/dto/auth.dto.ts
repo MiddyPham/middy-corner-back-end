@@ -19,30 +19,59 @@ export class LoginDto {
   password?: string;
 }
 
+export class RefreshTokenDto {
+  @ApiProperty({
+    description: 'Refresh token',
+    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+  })
+  @IsString()
+  refreshToken: string;
+}
+
 export class LoginResponseDto {
   @ApiProperty({
     description: 'JWT access token',
     example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
   })
-  accessToken: string;
+  access_token: string;
+
+  @ApiProperty({
+    description: 'JWT refresh token',
+    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+  })
+  refresh_token: string;
 
   @ApiProperty({
     description: 'User information',
     example: {
       id: 1,
       email: 'user@example.com',
-      firstName: 'John',
-      lastName: 'Doe',
-      picture: 'https://example.com/avatar.jpg',
+      name: 'John Doe',
+      avatar: 'https://example.com/avatar.jpg',
+      role: 'ADMIN',
     },
   })
   user: {
     id: number;
     email: string;
-    firstName: string;
-    lastName: string;
-    picture: string;
+    name: string;
+    avatar: string;
+    role: string;
   };
+}
+
+export class RefreshResponseDto {
+  @ApiProperty({
+    description: 'New JWT access token',
+    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+  })
+  access_token: string;
+
+  @ApiProperty({
+    description: 'New JWT refresh token',
+    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+  })
+  refresh_token: string;
 }
 
 export class GoogleAuthDto {

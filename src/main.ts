@@ -2,20 +2,21 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { Response } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
     origin: [
+      process.env.CLIENT_URL,
+      process.env.GOOGLE_URL,
+      process.env.GOOGLE_API_URL,
+      process.env.VITE_PREVIEW,
+      process.env.VITE_PORT,
+      process.env.CLIENT_URL_LOCAL,
+      process.env.SERVER_URL_LOCAL,
       'http://localhost:3000',
-      'http://localhost:8000',
-      'http://localhost:8001',
-      'http://localhost:3001',
-      'http://localhost:5173', // Vite default port
-      'http://localhost:4173', // Vite preview port
-      'https://accounts.google.com',
-      'https://www.googleapis.com',
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
@@ -52,12 +53,24 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
+
   SwaggerModule.setup('api', app, document, {
     swaggerOptions: {
       persistAuthorization: true,
     },
   });
 
-  await app.listen(8001);
+  app.use('/api-json', (req, res: Response) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(document);
+  });
+
+  const port = process.env.PORT || 8001;
+  await app.listen(port);
+  console.log(`🚀 Application is running on: http://localhost:${port}`);
+  console.log(`📚 Swagger UI available at: http://localhost:${port}/api`);
+  console.log(
+    `📄 OpenAPI JSON available at: http://localhost:${port}/api-json`,
+  );
 }
 bootstrap();

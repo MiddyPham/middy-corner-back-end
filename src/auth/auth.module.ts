@@ -15,9 +15,13 @@ import { FacebookStrategy } from './strategies/facebook.strategy';
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get('JWT_SECRET') || 'fallback-secret-key-for-development',
-        signOptions: { expiresIn: '1d' },
+      useFactory: (configService: ConfigService) => ({
+        secret:
+          configService.get('JWT_SECRET') ||
+          'fallback-secret-key-for-development',
+        signOptions: {
+          expiresIn: '15m',
+        },
       }),
       inject: [ConfigService],
     }),
