@@ -18,7 +18,7 @@ export default new DataSource({
   password: configService.get('DATABASE_PASSWORD', ''),
   database: configService.get('DATABASE_NAME', 'middy_corner'),
   entities: [User, Post, Comment, Reaction, Category, Tag, Media],
-  migrations: ['src/database/migrations/*.ts'],
+  migrations: ['dist/database/migrations/*.js'],
   migrationsTableName: 'migrations',
   synchronize: false,
   ssl:
